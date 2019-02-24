@@ -1,7 +1,7 @@
 public class Simulator
 {
   //final double PIDtimeStep = 0.001;
-  double angularSetpoint = 140;
+  double angularSetpoint = 100;
   double currentSetpoint = 0;
   public Controller angularPID = new Controller
     (
@@ -15,7 +15,7 @@ public class Simulator
   public Controller currentPID = new Controller
     (
     11.81 // Kp
-    ,0.208 // Ki
+    ,3.208 // Ki
     ,0 // Kd
     //,0 // saturation: MIN
     //,220  // saturation: MAX
@@ -37,8 +37,8 @@ public class Simulator
       currentSetpoint = angularPID.CalculateOutput(angularSetpoint, RK4.x[1], timeStep);
       RK4.x = RK4.CalculateNextStep(currentPID.CalculateOutput(currentSetpoint, RK4.x[0], timeStep), timeStep);
 
-      points[0].add(i, (int) RK4.x[0]);
-      points[1].add(i, (int) RK4.x[1]);
+      points[0].add((float) (i * timeStep), (float) RK4.x[0]);
+      points[1].add((float) (i * timeStep), (float) RK4.x[1]);
       //error_int += (Math.Abs(setpoint - RK4.x[1])) * timeStep;
     }
 
