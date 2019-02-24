@@ -1,10 +1,12 @@
 public class Simulator
 {
   //final double initialKp = 5, initialKi = 0.2, initialKd = 0.001;
-  final double initialKp = 9.308, initialKi = 6.566, initialKd = 0.951;
-  final double PIDtimeStep = 0.001;
-  double setpoint = 150;
-  public Controller PID = new Controller(initialKp, initialKi, initialKd);
+  //final double initialKp = 9.308, initialKi = 6.566, initialKd = 0.951;
+  //final double PIDtimeStep = 0.001;
+  double setpoint = 100;
+  double secondSetpoint = 0;
+  public Controller angularPID = new Controller(5.45, 1.4, 0, 0, 230);
+  public Controller currentPID = new Controller(11.81, 0.208, 0, 0, 120);
   public Solver RK4 = new Solver();
 
   //public double fitness = 0;
@@ -18,7 +20,8 @@ public class Simulator
 
     for (int i = 0; i < numberOfProbes; i++)
     {
-      RK4.x = RK4.CalculateNextStep(PID.CalculateOutput(setpoint, RK4.x[1], PIDtimeStep), timeStep);
+      secondSetpoint = angularPID.CalculateOutput(setpoint, RK4.x[0], timeStep);
+      RK4.x = RK4.CalculateNextStep(currentPID.CalculateOutput(secondSetpoint, RK4.x[1], timeStep), timeStep);
 
       points[0].add(i, (int) RK4.x[0]);
       points[1].add(i, (int) RK4.x[1]);

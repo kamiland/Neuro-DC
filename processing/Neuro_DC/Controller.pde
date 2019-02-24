@@ -4,14 +4,25 @@ public class Controller
   double P, I, D;
   double integral, derivative;
   double error, preError = 0, controllerOutput = 0;
-  final int maxOutput = 230;
-  final int minOutput = 0;
+  int minOutput;
+  int maxOutput;
+  boolean saturation = false;
 
   public Controller(double initialKp, double initialKi, double initialKd)
   {
     Kp = initialKp;
     Ki = initialKi;
     Kd = initialKd;
+  }
+
+  public Controller(double initialKp, double initialKi, double initialKd, int minOut, int maxOut)
+  {
+    saturation = true;
+    Kp = initialKp;
+    Ki = initialKi;
+    Kd = initialKd;
+    minOutput = minOut;
+    maxOutput = maxOut;
   }
 
   public double CalculateOutput(double setpoint, double pv, double dt)
@@ -29,8 +40,12 @@ public class Controller
     preError = error;
 
     controllerOutput = P + I + D;
-    if (controllerOutput > maxOutput) controllerOutput = maxOutput;
-    if (controllerOutput < minOutput) controllerOutput = minOutput;
+
+    if (true == saturation)
+    {
+      if (controllerOutput > maxOutput) controllerOutput = maxOutput;
+      if (controllerOutput < minOutput) controllerOutput = minOutput;
+    }
 
     return controllerOutput;
   }
