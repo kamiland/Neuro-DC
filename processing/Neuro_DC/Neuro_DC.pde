@@ -8,8 +8,8 @@ void setup() {
   background(150);
 
   Simulator simulatorDC = new Simulator();
-  long numberOfProbes = 10000;
-  double timeStep = 0.0001;
+  final long numberOfProbes = 10000;
+  final double timeStep = 0.0001;
 
   points = new GPointsArray[2];
   points[0] = new GPointsArray((int)numberOfProbes);

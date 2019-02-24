@@ -1,12 +1,24 @@
 public class Simulator
 {
-  //final double initialKp = 5, initialKi = 0.2, initialKd = 0.001;
-  //final double initialKp = 9.308, initialKi = 6.566, initialKd = 0.951;
   //final double PIDtimeStep = 0.001;
   double setpoint = 100;
   double secondSetpoint = 0;
-  public Controller angularPID = new Controller(5.45, 1.4, 0, 0, 230);
-  public Controller currentPID = new Controller(11.81, 0.208, 0, 0, 120);
+  public Controller angularPID = new Controller(
+    5.45, // Kp
+    1.4, // Ki
+    0, // Kd
+    0, // saturation: MIN
+    230 // saturation: MAX
+    );
+
+  public Controller currentPID = new Controller(
+    11.81, // Kp
+    0.208, // Ki
+    0, // Kd
+    0, // saturation: MIN
+    120 // saturation: MAX
+    );
+
   public Solver RK4 = new Solver();
 
   //public double fitness = 0;
