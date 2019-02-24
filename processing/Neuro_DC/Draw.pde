@@ -1,7 +1,7 @@
-void draw(GPlot[] plot, GPointsArray[] points)
+void drawPlots(GPlot[] plot, GPointsArray[] points)
 {
   float[] firstPlotPos = new float[] {0, 0};
-  float[] panelDim = new float[] {400, 400};
+  float[] panelDim = new float[] {600, 600};
   float[] margins = new float[] {60, 70, 40, 30};
 
   plot[0].setPos(firstPlotPos);
@@ -35,7 +35,7 @@ void draw(GPlot[] plot, GPointsArray[] points)
   plot[0].drawTopAxis();
   plot[0].drawRightAxis();
   plot[0].drawTitle();
-  plot[0].drawPoints();
+  //plot[0].drawPoints();
   plot[0].drawLines();
   plot[0].endDraw();
 
@@ -45,7 +45,7 @@ void draw(GPlot[] plot, GPointsArray[] points)
   plot[1].drawYAxis();
   plot[1].drawTopAxis();
   plot[1].drawRightAxis();
-  plot[1].drawPoints();
+  //plot[1].drawPoints();
   plot[1].drawLines();
   plot[1].endDraw();
 }
