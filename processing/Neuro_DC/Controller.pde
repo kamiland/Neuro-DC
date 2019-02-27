@@ -8,21 +8,21 @@ public class Controller
   int maxOutput;
   boolean saturation = false;
 
-  public Controller(double initialKp, double initialKi, double initialKd)
+  public Controller(double _Kp, double _Ki, double _Kd)
   {
-    Kp = initialKp;
-    Ki = initialKi;
-    Kd = initialKd;
+    Kp = _Kp;
+    Ki = _Ki;
+    Kd = _Kd;
   }
 
-  public Controller(double initialKp, double initialKi, double initialKd, int minOut, int maxOut)
+  public Controller(double _Kp, double _Ki, double _Kd, int _minOutput, int _maxOutput)
   {
     saturation = true;
-    Kp = initialKp;
-    Ki = initialKi;
-    Kd = initialKd;
-    minOutput = minOut;
-    maxOutput = maxOut;
+    Kp = _Kp;
+    Ki = _Ki;
+    Kd = _Kd;
+    minOutput = _minOutput;
+    maxOutput = _maxOutput;
   }
 
   public double CalculateOutput(double setpoint, double pv, double dt)

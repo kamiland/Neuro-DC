@@ -7,8 +7,10 @@ void setup() {
   size(1300, 700);
   background(150);
 
-  Simulator simulatorDC = new Simulator();
-  final long numberOfProbes = 5000;
+  SinglePIDSimulator simulatorDC = new SinglePIDSimulator();
+  //DoublePIDSimulator simulatorDC = new DoublePIDSimulator();
+
+  final long numberOfProbes = 10000;
   final double timeStep = 0.0001;
 
   points = new GPointsArray[2];
@@ -20,8 +22,6 @@ void setup() {
   plot = new GPlot[2];
   plot[0] = new GPlot(this);
   plot[1] = new GPlot(this);
-
-  
 }
 
 void draw()

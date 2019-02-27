@@ -11,7 +11,7 @@ void drawPlots(GPlot[] plot, GPointsArray[] points)
   plot[0].setTicksLength(-4);
   plot[0].getXAxis().setDrawTickLabels(true);
 
-  plot[1].setPos(firstPlotPos[0] + margins[1] + panelDim[0] , firstPlotPos[1]);
+  plot[1].setPos(firstPlotPos[0] + margins[1] + panelDim[0], firstPlotPos[1]);
   plot[1].setMar(0, 0, margins[2], margins[3]);
   plot[1].setDim(panelDim);
   plot[1].setAxesOffset(0);
