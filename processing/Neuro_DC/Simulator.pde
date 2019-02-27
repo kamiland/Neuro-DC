@@ -1,7 +1,20 @@
+double abs(double x)
+{
+  return (x < 0) ? -x : x;
+}
+
+interface errorMethod
+{
+  int
+    absolute = 0, 
+    square = 1;
+}
+
+
 public class SinglePIDSimulator
 {
   //final double PIDtimeStep = 0.001;
-  double Setpoint = 100;
+  double setpoint = 100;
   public Controller PID = new Controller
     (
     8.236 // Kp
@@ -13,8 +26,19 @@ public class SinglePIDSimulator
 
   public Solver RK4 = new Solver();
 
-  //public double fitness = 0;
-  //double error_int = 0;
+  public double fitness = 0;
+  double errorIntegral = 0;
+
+  private int method = errorMethod.absolute;
+
+  public void SetAbsoluteErrorIntegral()
+  {
+    method = errorMethod.absolute;
+  }
+  public void SetSquareErrorIntegral()
+  {
+    method = errorMethod.square;
+  }
 
   public double[] Simulate(long numberOfProbes, double timeStep, GPointsArray[] points)
   {
@@ -23,33 +47,51 @@ public class SinglePIDSimulator
 
     for (int i = 0; i < numberOfProbes; i++)
     {
-      RK4.x = RK4.CalculateNextStep(PID.CalculateOutput(Setpoint, RK4.x[1], timeStep), timeStep);
+      RK4.x = RK4.CalculateNextStep(PID.CalculateOutput(setpoint, RK4.x[1], timeStep), timeStep);
 
       points[0].add((float) (i * timeStep), (float) RK4.x[0]);
       points[1].add((float) (i * timeStep), (float) RK4.x[1]);
-      //error_int += (Math.Abs(setpoint - RK4.x[1])) * timeStep;
+
+      if (method == errorMethod.absolute)
+      {
+        errorIntegral += ( abs(setpoint - RK4.x[1]) ) * timeStep;
+      } else
+      {
+        errorIntegral += (setpoint - RK4.x[1])*(setpoint - RK4.x[1]) * timeStep;
+      }
     }
 
-    //fitness = 1.0 / (error_int + 1.0);
+    fitness = 1.0 / (errorIntegral + 1.0);
     return RK4.x;
   }
-  
-    public double[] Simulate(long numberOfProbes, double timeStep)
+
+  public double[] Simulate(long numberOfProbes, double timeStep)
   {
     RK4.x[0] = 0; // rotor current
     RK4.x[1] = 0; // angular velocity
 
     for (int i = 0; i < numberOfProbes; i++)
     {
-      RK4.x = RK4.CalculateNextStep(PID.CalculateOutput(Setpoint, RK4.x[1], timeStep), timeStep);
-      //error_int += (Math.Abs(setpoint - RK4.x[1])) * timeStep;
+      RK4.x = RK4.CalculateNextStep(PID.CalculateOutput(setpoint, RK4.x[1], timeStep), timeStep);
+
+      if (method == errorMethod.absolute)
+      {
+        errorIntegral += ( abs(setpoint - RK4.x[1]) ) * timeStep;
+      } else
+      {
+        errorIntegral += (setpoint - RK4.x[1])*(setpoint - RK4.x[1]) * timeStep;
+      }
     }
 
-    //fitness = 1.0 / (error_int + 1.0);
+    fitness = 1.0 / (errorIntegral + 1.0);
     return RK4.x;
   }
-  
 }
+
+
+
+
+
 
 public class DoublePIDSimulator
 {
@@ -76,8 +118,19 @@ public class DoublePIDSimulator
 
   public Solver RK4 = new Solver();
 
-  //public double fitness = 0;
-  //double error_int = 0;
+  public double fitness = 0;
+  double errorIntegral = 0;
+
+  private int method = errorMethod.absolute;
+
+  public void SetAbsoluteErrorIntegral()
+  {
+    method = errorMethod.absolute;
+  }
+  public void SetSquareErrorIntegral()
+  {
+    method = errorMethod.square;
+  }
 
 
   public double[] Simulate(long numberOfProbes, double timeStep, GPointsArray[] points)
@@ -92,10 +145,16 @@ public class DoublePIDSimulator
 
       points[0].add((float) (i * timeStep), (float) RK4.x[0]);
       points[1].add((float) (i * timeStep), (float) RK4.x[1]);
-      //error_int += (Math.Abs(setpoint - RK4.x[1])) * timeStep;
+      if (method == errorMethod.absolute)
+      {
+        errorIntegral += ( abs(angularSetpoint - RK4.x[1]) ) * timeStep;
+      } else
+      {
+        errorIntegral += (angularSetpoint - RK4.x[1])*(angularSetpoint - RK4.x[1]) * timeStep;
+      }
     }
 
-    //fitness = 1.0 / (error_int + 1.0);
+    fitness = 1.0 / (errorIntegral + 1.0);
     return RK4.x;
   }
 }
