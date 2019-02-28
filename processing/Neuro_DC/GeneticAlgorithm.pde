@@ -1,10 +1,10 @@
 public class GeneticAlgorithm
 {
-  SinglePIDSimulator[] engines;
-  SinglePIDSimulator[] nextGenerationEngines;
+  SinglePIDSimulator[] organism;
+  SinglePIDSimulator[] nextGenerationOrganism;
   SinglePIDSimulator best = new SinglePIDSimulator();
 
-  /*static*/ int populationSize; /**ilość osobników w populacji   */
+  /*static*/  int populationSize; /**ilość osobników w populacji   */
   int generationCounter = 0;
 
   double bestFit = 0;
@@ -17,23 +17,23 @@ public class GeneticAlgorithm
   double D_range = 10;
 
   long numberOfProbes; /** ilość próbek symulacji   */
-  double timeStep = 0.0001;
+  double timeStep;
 
-  public GeneticAlgorithm(long _numberOfProbes, int _pupulationSize, double[] _objectParameters, double _timeStep)
+  public GeneticAlgorithm(long _numberOfProbes, int _pupulationSize, /*double[] _objectParameters,*/ double _timeStep)
   {
     numberOfProbes = _numberOfProbes;
     populationSize = _pupulationSize;
-    objectParameters = _objectParameters;
-    engines = new SinglePIDSimulator[populationSize];
-    nextGenerationEngines = new SinglePIDSimulator[populationSize];
+    //objectParameters = _objectParameters;
+    organism = new SinglePIDSimulator[populationSize];
+    nextGenerationOrganism = new SinglePIDSimulator[populationSize];
     timeStep = _timeStep;
 
     for (int i = 0; i < populationSize; i++)
     {
-      engines[i] = new SinglePIDSimulator();
-      engines[i].PID.Kp = ((Math.random() * 2.0) - 1.0) * P_range; //randomize a P value between -P_range and P_range
-      engines[i].PID.Ki = ((Math.random() * 2.0) - 1.0) * I_range;
-      engines[i].PID.Kd = ((Math.random() * 2.0) - 1.0) * D_range;
+      organism[i] = new SinglePIDSimulator();
+      organism[i].PID.Kp = ((Math.random() * 2.0) - 1.0) * P_range; //randomize a P value between -P_range and P_range
+      organism[i].PID.Ki = ((Math.random() * 2.0) - 1.0) * I_range;
+      organism[i].PID.Kd = ((Math.random() * 2.0) - 1.0) * D_range;
     }
   }
 
@@ -42,7 +42,7 @@ public class GeneticAlgorithm
   {
     for (int i = 0; i < populationSize; i++)
     {
-      engines[i].Simulate(numberOfProbes, timeStep);
+      organism[i].Simulate(numberOfProbes, timeStep);
     }
     normalizeFitness();
     nextGeneration();
@@ -58,7 +58,7 @@ public class GeneticAlgorithm
     double[] PID = { best.PID.Kp, best.PID.Ki, best.PID.Kd };
     //Window1 graphWindow = new Window1();
     //graphWindow.Show();
-
+    print(best.PID.Kp, best.PID.Ki, best.PID.Kd);
     return PID;
   }
 
@@ -84,7 +84,7 @@ public class GeneticAlgorithm
     }
 
     for (int i = 0; i < populationSize; i++)
-      engines[i] = nextGenerationEngines[i];
+      organism[i] = nextGenerationOrganism[i];
   }
 
 
@@ -101,9 +101,9 @@ public class GeneticAlgorithm
       do
       {
         x = (int)(Math.random() * populationSize); 
-        if (Math.random() <= engines[x].fitness)
+        if (Math.random() <= organism[x].fitness)
         {
-          parent = engines[x];
+          parent = organism[x];
           picked = true;
         }
       } 
@@ -112,7 +112,7 @@ public class GeneticAlgorithm
     {
       parent = best;
     }
-    nextGenerationEngines[i] = tweak(parent);
+    nextGenerationOrganism[i] = tweak(parent);
   }
 
 
@@ -129,9 +129,9 @@ public class GeneticAlgorithm
     do
     {
       a = (int)(Math.random() * populationSize);
-      if (Math.random() <= engines[a].fitness)
+      if (Math.random() <= organism[a].fitness)
       {
-        parent_a = engines[a];
+        parent_a = organism[a];
         picked = true;
       }
     } 
@@ -142,16 +142,16 @@ public class GeneticAlgorithm
       do
       {
         b = (int)(Math.random() * populationSize);
-        if (a != b && (Math.random() <= engines[b].fitness))
+        if (a != b && (Math.random() <= organism[b].fitness))
         {
-          parent_b = engines[b];
+          parent_b = organism[b];
           picked = true;
         }
       } 
       while (!picked);
     } else
       parent_b = best; // 1% chance of picking "best" as a pair to cross with
-    nextGenerationEngines[i] = cross(parent_a, parent_b);
+    nextGenerationOrganism[i] = cross(parent_a, parent_b);
   }
 
   //Normalizacja wartości fitness wszystkich osobników tak aby były wartościami od 0 do 1
@@ -163,13 +163,13 @@ public class GeneticAlgorithm
     //Oszacowanie maksymalnej wartości fit.
     for (int i = 0; i < populationSize; i++)
     {
-      if (engines[i].fitness > maxFit)
+      if (organism[i].fitness > maxFit)
       {
-        maxFit = engines[i].fitness;
+        maxFit = organism[i].fitness;
         if (maxFit > bestFit)
         {
           bestFit = maxFit;
-          best = engines[i];
+          best = organism[i];
         }
       }
     }
@@ -177,14 +177,14 @@ public class GeneticAlgorithm
     minFit = maxFit;
     for (int i = 0; i < populationSize; i++)
     {
-      minFit = engines[i].fitness < minFit ? engines[i].fitness : minFit;
+      minFit = organism[i].fitness < minFit ? organism[i].fitness : minFit;
     }
 
     if (maxFit != 0)
       for (int i = 0; i < populationSize; i++)
       {
-        engines[i].fitness -= minFit;
-        engines[i].fitness /= (maxFit - minFit);
+        organism[i].fitness -= minFit;
+        organism[i].fitness /= (maxFit - minFit);
       }
   }
 
@@ -196,8 +196,8 @@ public class GeneticAlgorithm
     child.PID.Kp = ((Math.random() * 2.0) - 1.0) * P_range; //randomize a P value between -P_range and P_range
     child.PID.Ki = ((Math.random() * 2.0) - 1.0) * I_range;
     child.PID.Kd = ((Math.random() * 2.0) - 1.0) * D_range;
-    if (Math.random() > 0.01) nextGenerationEngines[i] = child;
-    else nextGenerationEngines[i] = best; // 1% chance of picking "best" as a mutant
+    if (Math.random() > 0.01) nextGenerationOrganism[i] = child;
+    else nextGenerationOrganism[i] = best; // 1% chance of picking "best" as a mutant
   }
 
 
@@ -223,5 +223,21 @@ public class GeneticAlgorithm
     crossingPoint = Math.random();
     child.PID.Kd = parent_a.PID.Kd * crossingPoint + parent_b.PID.Kd * (1.0 - crossingPoint);
     return child;
+  }
+
+  public void SetAbsoluteErrorIntegral()
+  {
+    for (int i = 0; i < populationSize; i++)
+    {
+      organism[i].SetAbsoluteErrorIntegral();
+    }
+  }
+
+  public void SetSquareErrorIntegral()
+  {
+    for (int i = 0; i < populationSize; i++)
+    {
+      organism[i].SetSquareErrorIntegral();
+    }
   }
 }
