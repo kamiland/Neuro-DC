@@ -11,7 +11,7 @@ interface errorMethod
 }
 
 
-public class SinglePIDSimulator
+public class SinglePIDsimulator
 {
   //final double PIDtimeStep = 0.001;
   double setpoint = 100;
@@ -93,7 +93,7 @@ public class SinglePIDSimulator
 
 
 
-public class DoublePIDSimulator
+public class DoublePIDsimulator
 {
   //final double PIDtimeStep = 0.001;
   double angularSetpoint = 100;

@@ -1,8 +1,8 @@
-public class GeneticAlgorithm
+public class SinglePIDGeneticAlgorithm
 {
-  SinglePIDSimulator[] organism;
-  SinglePIDSimulator[] nextGenerationOrganism;
-  SinglePIDSimulator best = new SinglePIDSimulator();
+  SinglePIDsimulator[] organism;
+  SinglePIDsimulator[] nextGenerationOrganism;
+  SinglePIDsimulator best = new SinglePIDsimulator();
 
   /*static*/  int populationSize; /**ilość osobników w populacji   */
   int generationCounter = 0;
@@ -19,18 +19,17 @@ public class GeneticAlgorithm
   long numberOfProbes; /** ilość próbek symulacji   */
   double timeStep;
 
-  public GeneticAlgorithm(long _numberOfProbes, int _pupulationSize, /*double[] _objectParameters,*/ double _timeStep)
+  public SinglePIDGeneticAlgorithm(long _numberOfProbes, int _pupulationSize, double _timeStep)
   {
     numberOfProbes = _numberOfProbes;
     populationSize = _pupulationSize;
-    //objectParameters = _objectParameters;
-    organism = new SinglePIDSimulator[populationSize];
-    nextGenerationOrganism = new SinglePIDSimulator[populationSize];
+    organism = new SinglePIDsimulator[populationSize];
+    nextGenerationOrganism = new SinglePIDsimulator[populationSize];
     timeStep = _timeStep;
 
     for (int i = 0; i < populationSize; i++)
     {
-      organism[i] = new SinglePIDSimulator();
+      organism[i] = new SinglePIDsimulator();
       organism[i].PID.Kp = ((Math.random() * 2.0) - 1.0) * P_range; //randomize a P value between -P_range and P_range
       organism[i].PID.Ki = ((Math.random() * 2.0) - 1.0) * I_range;
       organism[i].PID.Kd = ((Math.random() * 2.0) - 1.0) * D_range;
@@ -51,13 +50,10 @@ public class GeneticAlgorithm
 
 
   //Wyświetla najlepszy wynik operacji numerycznych. 
-  //zmienic nazwe lub sposób działania bo ta metoda nic nie pokazuje
   public double[] showBest()
   {
     best.Simulate(numberOfProbes, timeStep);
     double[] PID = { best.PID.Kp, best.PID.Ki, best.PID.Kd };
-    //Window1 graphWindow = new Window1();
-    //graphWindow.Show();
     print(best.PID.Kp, best.PID.Ki, best.PID.Kd);
     return PID;
   }
@@ -91,7 +87,7 @@ public class GeneticAlgorithm
   //Wybór jednego osobnika z populacji oraz delikatna modyfikacja jego nastaw
   void pickTweak(int i)
   {
-    SinglePIDSimulator parent = new SinglePIDSimulator();
+    SinglePIDsimulator parent = new SinglePIDsimulator();
     int x;
     boolean picked;
 
@@ -119,9 +115,9 @@ public class GeneticAlgorithm
   //Wybieranie dwóch osobników z populacji oraz krzyżowanie ich.
   void pickAndCross(int i)
   {
-    SinglePIDSimulator parent_a = new SinglePIDSimulator();
+    SinglePIDsimulator parent_a = new SinglePIDsimulator();
     int a;
-    SinglePIDSimulator parent_b = new SinglePIDSimulator();
+    SinglePIDsimulator parent_b = new SinglePIDsimulator();
     int b;
     boolean picked;
 
@@ -192,7 +188,7 @@ public class GeneticAlgorithm
   //Funkcja tworząca nowy losowy organizm
   void mutatant(int i)
   {
-    SinglePIDSimulator child = new SinglePIDSimulator();
+    SinglePIDsimulator child = new SinglePIDsimulator();
     child.PID.Kp = ((Math.random() * 2.0) - 1.0) * P_range; //randomize a P value between -P_range and P_range
     child.PID.Ki = ((Math.random() * 2.0) - 1.0) * I_range;
     child.PID.Kd = ((Math.random() * 2.0) - 1.0) * D_range;
@@ -202,9 +198,9 @@ public class GeneticAlgorithm
 
 
   //Funkcja delikatnie modyfikująca jeden organizm
-  SinglePIDSimulator tweak(SinglePIDSimulator parent) 
+  SinglePIDsimulator tweak(SinglePIDsimulator parent) 
   {
-    SinglePIDSimulator child = new SinglePIDSimulator();
+    SinglePIDsimulator child = new SinglePIDsimulator();
     child.PID.Kp = parent.PID.Kp + (Math.random() * 2.0) - 1.0; // value of P +- random between 0 and 1
     child.PID.Ki = parent.PID.Ki + (Math.random() * 2.0) - 1.0;
     child.PID.Kd = parent.PID.Kd + (Math.random() * 2.0) - 1.0;
@@ -213,9 +209,9 @@ public class GeneticAlgorithm
 
 
   //  Funkcja krzyrzująca dwa organizmy
-  SinglePIDSimulator cross(SinglePIDSimulator parent_a, SinglePIDSimulator parent_b)
+  SinglePIDsimulator cross(SinglePIDsimulator parent_a, SinglePIDsimulator parent_b)
   {
-    SinglePIDSimulator child = new SinglePIDSimulator();
+    SinglePIDsimulator child = new SinglePIDsimulator();
     double crossingPoint = Math.random();
     child.PID.Kp = parent_a.PID.Kp * crossingPoint + parent_b.PID.Kp * (1.0 - crossingPoint); // picking a new P value in random spot between parent_a.P and parent_b.P
     crossingPoint = Math.random();

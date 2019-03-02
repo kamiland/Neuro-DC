@@ -7,10 +7,10 @@ void setup() {
   size(1300, 700);
   background(150);
 
-  SinglePIDSimulator simulatorDC = new SinglePIDSimulator();
+  SinglePIDsimulator simulatorDC = new SinglePIDsimulator();
   //DoublePIDSimulator simulatorDC = new DoublePIDSimulator();
 
-  final long numberOfProbes = 1000;
+  final long numberOfProbes = 2000;
   final double timeStep = 0.001;
 
   points = new GPointsArray[2];
@@ -19,8 +19,8 @@ void setup() {
 
   
 
-  double[] PID;
-  GeneticAlgorithm Optimization = new GeneticAlgorithm(numberOfProbes, 100, timeStep);
+  double[] PIDparameters;
+  SinglePIDGeneticAlgorithm Optimization = new SinglePIDGeneticAlgorithm(numberOfProbes, 100, timeStep);
   
   Optimization.SetAbsoluteErrorIntegral();
   
@@ -28,10 +28,10 @@ void setup() {
   {
     Optimization.doOneGeneration();
   }
-  PID = Optimization.showBest();
-  simulatorDC.PID.Kp = PID[0];
-  simulatorDC.PID.Ki = PID[1];
-  simulatorDC.PID.Kd = PID[2];
+  PIDparameters = Optimization.showBest();
+  simulatorDC.PID.Kp = PIDparameters[0];
+  simulatorDC.PID.Ki = PIDparameters[1];
+  simulatorDC.PID.Kd = PIDparameters[2];
   simulatorDC.Simulate(numberOfProbes, timeStep, points);
 
 
