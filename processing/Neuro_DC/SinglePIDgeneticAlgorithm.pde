@@ -1,4 +1,4 @@
-public class SinglePIDGeneticAlgorithm
+public class SinglePIDgeneticAlgorithm
 {
   SinglePIDsimulator[] organism;
   SinglePIDsimulator[] nextGenerationOrganism;
@@ -12,14 +12,14 @@ public class SinglePIDGeneticAlgorithm
 
   double rand;
 
-  double P_range = 10;
-  double I_range = 10;
-  double D_range = 10;
+  double KpRange = 10;
+  double KiRange = 10;
+  double KdRange = 10;
 
   long numberOfProbes; /** ilość próbek symulacji   */
   double timeStep;
 
-  public SinglePIDGeneticAlgorithm(long _numberOfProbes, int _pupulationSize, double _timeStep)
+  public SinglePIDgeneticAlgorithm(long _numberOfProbes, int _pupulationSize, double _timeStep)
   {
     numberOfProbes = _numberOfProbes;
     populationSize = _pupulationSize;
@@ -30,9 +30,9 @@ public class SinglePIDGeneticAlgorithm
     for (int i = 0; i < populationSize; i++)
     {
       organism[i] = new SinglePIDsimulator();
-      organism[i].PID.Kp = ((Math.random() * 2.0) - 1.0) * P_range; //randomize a P value between -P_range and P_range
-      organism[i].PID.Ki = ((Math.random() * 2.0) - 1.0) * I_range;
-      organism[i].PID.Kd = ((Math.random() * 2.0) - 1.0) * D_range;
+      organism[i].PID.Kp = ((Math.random() * 2.0) - 1.0) * KpRange; //randomize a P value between -KpRange and KpRange
+      organism[i].PID.Ki = ((Math.random() * 2.0) - 1.0) * KiRange;
+      organism[i].PID.Kd = ((Math.random() * 2.0) - 1.0) * KdRange;
     }
   }
 
@@ -115,9 +115,9 @@ public class SinglePIDGeneticAlgorithm
   //Wybieranie dwóch osobników z populacji oraz krzyżowanie ich.
   void pickAndCross(int i)
   {
-    SinglePIDsimulator parent_a = new SinglePIDsimulator();
+    SinglePIDsimulator parentA = new SinglePIDsimulator();
     int a;
-    SinglePIDsimulator parent_b = new SinglePIDsimulator();
+    SinglePIDsimulator parentB = new SinglePIDsimulator();
     int b;
     boolean picked;
 
@@ -127,7 +127,7 @@ public class SinglePIDGeneticAlgorithm
       a = (int)(Math.random() * populationSize);
       if (Math.random() <= organism[a].fitness)
       {
-        parent_a = organism[a];
+        parentA = organism[a];
         picked = true;
       }
     } 
@@ -140,14 +140,16 @@ public class SinglePIDGeneticAlgorithm
         b = (int)(Math.random() * populationSize);
         if (a != b && (Math.random() <= organism[b].fitness))
         {
-          parent_b = organism[b];
+          parentB = organism[b];
           picked = true;
         }
       } 
       while (!picked);
     } else
-      parent_b = best; // 1% chance of picking "best" as a pair to cross with
-    nextGenerationOrganism[i] = cross(parent_a, parent_b);
+    {
+      parentB = best; // 1% chance of picking "best" as a pair to cross with
+    }
+    nextGenerationOrganism[i] = cross(parentA, parentB);
   }
 
   //Normalizacja wartości fitness wszystkich osobników tak aby były wartościami od 0 do 1
@@ -189,11 +191,16 @@ public class SinglePIDGeneticAlgorithm
   void mutatant(int i)
   {
     SinglePIDsimulator child = new SinglePIDsimulator();
-    child.PID.Kp = ((Math.random() * 2.0) - 1.0) * P_range; //randomize a P value between -P_range and P_range
-    child.PID.Ki = ((Math.random() * 2.0) - 1.0) * I_range;
-    child.PID.Kd = ((Math.random() * 2.0) - 1.0) * D_range;
-    if (Math.random() > 0.01) nextGenerationOrganism[i] = child;
-    else nextGenerationOrganism[i] = best; // 1% chance of picking "best" as a mutant
+    child.PID.Kp = ((Math.random() * 2.0) - 1.0) * KpRange; //randomize a P value between -KpRange and KpRange
+    child.PID.Ki = ((Math.random() * 2.0) - 1.0) * KiRange;
+    child.PID.Kd = ((Math.random() * 2.0) - 1.0) * KdRange;
+    if (Math.random() > 0.01) 
+    {
+      nextGenerationOrganism[i] = child;
+    } else 
+    {
+      nextGenerationOrganism[i] = best; // 1% chance of picking "best" as a mutant
+    }
   }
 
 
@@ -209,15 +216,15 @@ public class SinglePIDGeneticAlgorithm
 
 
   //  Funkcja krzyrzująca dwa organizmy
-  SinglePIDsimulator cross(SinglePIDsimulator parent_a, SinglePIDsimulator parent_b)
+  SinglePIDsimulator cross(SinglePIDsimulator parentA, SinglePIDsimulator parentB)
   {
     SinglePIDsimulator child = new SinglePIDsimulator();
     double crossingPoint = Math.random();
-    child.PID.Kp = parent_a.PID.Kp * crossingPoint + parent_b.PID.Kp * (1.0 - crossingPoint); // picking a new P value in random spot between parent_a.P and parent_b.P
+    child.PID.Kp = parentA.PID.Kp * crossingPoint + parentB.PID.Kp * (1.0 - crossingPoint); // picking a new P value in random spot between parentA.P and parentB.P
     crossingPoint = Math.random();
-    child.PID.Ki = parent_a.PID.Ki * crossingPoint + parent_b.PID.Ki * (1.0 - crossingPoint);
+    child.PID.Ki = parentA.PID.Ki * crossingPoint + parentB.PID.Ki * (1.0 - crossingPoint);
     crossingPoint = Math.random();
-    child.PID.Kd = parent_a.PID.Kd * crossingPoint + parent_b.PID.Kd * (1.0 - crossingPoint);
+    child.PID.Kd = parentA.PID.Kd * crossingPoint + parentB.PID.Kd * (1.0 - crossingPoint);
     return child;
   }
 

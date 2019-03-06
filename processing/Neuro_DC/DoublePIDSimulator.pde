@@ -23,9 +23,9 @@ public class DoublePIDsimulator extends Simulator
   public DoublePIDsimulator()
   {
   }
-  public DoublePIDsimulator(double _setpoint)
+  public DoublePIDsimulator(double _angularSetpoint)
   {
-    setpoint = _setpoint;
+    angularSetpoint = _angularSetpoint;
   }
 
   public double[] Simulate(long numberOfProbes, double timeStep, GPointsArray[] points)
@@ -40,7 +40,30 @@ public class DoublePIDsimulator extends Simulator
 
       points[0].add((float) (i * timeStep), (float) RK4.x[0]);
       points[1].add((float) (i * timeStep), (float) RK4.x[1]);
-      
+
+      if (method == errorMethod.absolute)
+      {
+        errorIntegral += ( abs(angularSetpoint - RK4.x[1]) ) * timeStep;
+      } else
+      {
+        errorIntegral += (angularSetpoint - RK4.x[1])*(angularSetpoint - RK4.x[1]) * timeStep;
+      }
+    }
+
+    fitness = 1.0 / (errorIntegral + 1.0);
+    return RK4.x;
+  }
+  
+    public double[] Simulate(long numberOfProbes, double timeStep)
+  {
+    RK4.x[0] = 0; // rotor current
+    RK4.x[1] = 0; // angular velocity
+
+    for (int i = 0; i < numberOfProbes; i++)
+    {
+      currentSetpoint = angularPID.CalculateOutput(angularSetpoint, RK4.x[1], timeStep);
+      RK4.x = RK4.CalculateNextStep(currentPID.CalculateOutput(currentSetpoint, RK4.x[0], timeStep), timeStep);
+
       if (method == errorMethod.absolute)
       {
         errorIntegral += ( abs(angularSetpoint - RK4.x[1]) ) * timeStep;
