@@ -1,0 +1,127 @@
+double abs(double x)
+{
+  return (x < 0) ? -x : x;
+}
+
+public enum errorMethod
+{
+  absolute, square
+}
+
+<<<<<<< HEAD
+abstract class Simulator 
+=======
+
+public class SinglePIDsimulator
+>>>>>>> 940e53951d10ac272e60851c0aeadb25f2ca41f7
+{
+  //final double PIDtimeStep = 0.001;
+  double setpoint = 100;
+  double errorIntegral = 0;
+<<<<<<< HEAD
+  errorMethod method = errorMethod.absolute;
+=======
+
+  private int method = errorMethod.absolute;
+
+  public void SetAbsoluteErrorIntegral()
+  {
+    method = errorMethod.absolute;
+  }
+  public void SetSquareErrorIntegral()
+  {
+    method = errorMethod.square;
+  }
+
+  public double[] Simulate(long numberOfProbes, double timeStep, GPointsArray[] points)
+  {
+    RK4.x[0] = 0; // rotor current
+    RK4.x[1] = 0; // angular velocity
+
+    for (int i = 0; i < numberOfProbes; i++)
+    {
+      RK4.x = RK4.CalculateNextStep(PID.CalculateOutput(setpoint, RK4.x[1], timeStep), timeStep);
+
+      points[0].add((float) (i * timeStep), (float) RK4.x[0]);
+      points[1].add((float) (i * timeStep), (float) RK4.x[1]);
+
+      if (method == errorMethod.absolute)
+      {
+        errorIntegral += ( abs(setpoint - RK4.x[1]) ) * timeStep;
+      } else
+      {
+        errorIntegral += (setpoint - RK4.x[1])*(setpoint - RK4.x[1]) * timeStep;
+      }
+    }
+
+    fitness = 1.0 / (errorIntegral + 1.0);
+    return RK4.x;
+  }
+
+  public double[] Simulate(long numberOfProbes, double timeStep)
+  {
+    RK4.x[0] = 0; // rotor current
+    RK4.x[1] = 0; // angular velocity
+
+    for (int i = 0; i < numberOfProbes; i++)
+    {
+      RK4.x = RK4.CalculateNextStep(PID.CalculateOutput(setpoint, RK4.x[1], timeStep), timeStep);
+
+      if (method == errorMethod.absolute)
+      {
+        errorIntegral += ( abs(setpoint - RK4.x[1]) ) * timeStep;
+      } else
+      {
+        errorIntegral += (setpoint - RK4.x[1])*(setpoint - RK4.x[1]) * timeStep;
+      }
+    }
+
+    fitness = 1.0 / (errorIntegral + 1.0);
+    return RK4.x;
+  }
+}
+
+
+
+
+
+
+public class DoublePIDsimulator
+{
+  //final double PIDtimeStep = 0.001;
+  double angularSetpoint = 100;
+  double currentSetpoint = 0;
+  public Controller angularPID = new Controller
+    (
+    5.45 // Kp
+    , 1.4 // Ki
+    , 0 // Kd
+    , 0 // saturation: MIN
+    , 230  // saturation: MAX
+    );
+
+  public Controller currentPID = new Controller
+    (
+    11.81 // Kp
+    , 3.208 // Ki
+    , 0 // Kd
+    //, 0 // saturation: MIN
+    //, 220  // saturation: MAX
+    );
+
+  public Solver RK4 = new Solver();
+>>>>>>> 940e53951d10ac272e60851c0aeadb25f2ca41f7
+
+  public double fitness = 0;
+  public Solver RK4 = new Solver(); 
+
+  public void SetAbsoluteErrorIntegral()
+  {
+    method = errorMethod.absolute;
+  }
+  public void SetSquareErrorIntegral()
+  {
+    method = errorMethod.square;
+  }
+
+}

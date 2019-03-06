@@ -6,12 +6,21 @@ GPlot[] plot;
 void setup() {
   size(1300, 700);
   background(150);
+<<<<<<< HEAD
+  
+  SinglePIDSimulator simulatorDC = new SinglePIDSimulator(110);
+  //DoublePIDSimulator simulatorDC = new DoublePIDSimulator();
+
+  final long numberOfProbes = 10000;
+  final double timeStep = 0.0001;
+=======
 
   SinglePIDsimulator simulatorDC = new SinglePIDsimulator();
   //DoublePIDSimulator simulatorDC = new DoublePIDSimulator();
 
   final long numberOfProbes = 2000;
   final double timeStep = 0.001;
+>>>>>>> 940e53951d10ac272e60851c0aeadb25f2ca41f7
 
   points = new GPointsArray[2];
   points[0] = new GPointsArray((int)numberOfProbes);
@@ -22,7 +31,7 @@ void setup() {
   double[] PIDparameters;
   SinglePIDGeneticAlgorithm Optimization = new SinglePIDGeneticAlgorithm(numberOfProbes, 100, timeStep);
   
-  Optimization.SetAbsoluteErrorIntegral();
+  Optimization.SetSquareErrorIntegral();
   
   for (int i = 0; i < 30; i++)
   {
