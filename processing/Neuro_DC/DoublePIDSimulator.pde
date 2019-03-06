@@ -20,10 +20,10 @@ public class DoublePIDsimulator extends Simulator
     //, 220  // saturation: MAX
     );
 
-  public DoublePIDSimulator()
+  public DoublePIDsimulator()
   {
   }
-  public DoublePIDSimulator(double _setpoint)
+  public DoublePIDsimulator(double _setpoint)
   {
     setpoint = _setpoint;
   }

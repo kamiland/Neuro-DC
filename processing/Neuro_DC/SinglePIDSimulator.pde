@@ -9,10 +9,10 @@ public class SinglePIDsimulator extends Simulator
     , 230  // saturation: MAX
     );
 
-  public SinglePIDSimulator() 
+  public SinglePIDsimulator() 
   {
   }
-  public SinglePIDSimulator(double _setpoint)
+  public SinglePIDsimulator(double _setpoint)
   {
     setpoint = _setpoint;
   }
