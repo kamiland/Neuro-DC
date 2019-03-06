@@ -43,10 +43,10 @@ public class DoublePIDsimulator extends Simulator
 
       if (method == errorMethod.absolute)
       {
-        errorIntegral += ( abs(angularSetpoint - RK4.x[1]) ) * timeStep;
+        errorIntegral += (abs(angularSetpoint - RK4.x[1])) * timeStep /*+ (abs(currentSetpoint - RK4.x[0])) * timeStep*/;
       } else
       {
-        errorIntegral += (angularSetpoint - RK4.x[1])*(angularSetpoint - RK4.x[1]) * timeStep;
+        errorIntegral += (angularSetpoint - RK4.x[1])*(angularSetpoint - RK4.x[1]) * timeStep /*+ (currentSetpoint - RK4.x[0])*(currentSetpoint - RK4.x[0]) * timeStep*/;
       }
     }
 
@@ -74,6 +74,7 @@ public class DoublePIDsimulator extends Simulator
     }
 
     fitness = 1.0 / (errorIntegral + 1.0);
+    //println("\nerrorIntegral: ", errorIntegral);
     return RK4.x;
   }
 }

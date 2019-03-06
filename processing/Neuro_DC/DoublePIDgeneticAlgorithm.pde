@@ -50,7 +50,6 @@ public class DoublePIDgeneticAlgorithm
   {
     for (int i = 0; i < populationSize; i++)
     {
-      print(" ", i);
       organism[i].Simulate(numberOfProbes, timeStep);
     }
     normalizeFitness();
@@ -64,7 +63,7 @@ public class DoublePIDgeneticAlgorithm
   {
     best.Simulate(numberOfProbes, timeStep);
     double[] PID = { best.angularPID.Kp, best.angularPID.Ki, best.angularPID.Kd, best.currentPID.Kp, best.currentPID.Ki, best.currentPID.Kd };
-    print(best.angularPID.Kp, best.angularPID.Ki, best.angularPID.Kd, '\n', best.currentPID.Kp, best.currentPID.Ki, best.currentPID.Kd);
+    println(PID[0], PID[1], PID[2], '\n',PID[3], PID[4], PID[5]);
     return PID;
   }
 
@@ -100,6 +99,7 @@ public class DoublePIDgeneticAlgorithm
     DoublePIDsimulator parent = new DoublePIDsimulator();
     int x;
     boolean picked;
+    int limit = 0;
 
     if (Math.random() > 0.01)
     {
@@ -112,9 +112,10 @@ public class DoublePIDgeneticAlgorithm
           parent = organism[x];
           picked = true;
         }
-        print("pickTwick?");
+        limit++;
+        //print("pickTwick? ");
       } 
-      while (!picked);
+      while (!picked && (limit < 100));
     } else
     {
       parent = best;
@@ -131,6 +132,7 @@ public class DoublePIDgeneticAlgorithm
     DoublePIDsimulator parentB = new DoublePIDsimulator();
     int b;
     boolean picked;
+    int limit = 0;
 
     picked = false;
     do
@@ -141,8 +143,11 @@ public class DoublePIDgeneticAlgorithm
         parentA = organism[a];
         picked = true;
       }
+      limit++;
+      //print("pickAndCross A? ");
     } 
-    while (!picked);
+    while (!picked && (limit < 100));
+    limit = 0;
 
     if (Math.random() > 0.01)
     {
@@ -155,8 +160,10 @@ public class DoublePIDgeneticAlgorithm
           parentB = organism[b];
           picked = true;
         }
+        limit++;
+        //print("pickAndCross B? ");
       } 
-      while (!picked);
+      while (!picked && (limit < 100));
     } else
     {
       parentB = best; // 1% chance of picking "best" as a pair to cross with
@@ -203,7 +210,7 @@ public class DoublePIDgeneticAlgorithm
   void mutatant(int i)
   {
     DoublePIDsimulator child = new DoublePIDsimulator();
-    
+
     child.angularPID.Kp = ((Math.random() * 2.0) - 1.0) * KpRange; //randomize a P value between -KpRange and KpRange
     child.angularPID.Ki = ((Math.random() * 2.0) - 1.0) * KiRange;
     child.angularPID.Kd = ((Math.random() * 2.0) - 1.0) * KdRange;

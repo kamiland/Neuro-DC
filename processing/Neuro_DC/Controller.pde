@@ -7,8 +7,8 @@ public class Controller
   int minOutput;
   int maxOutput;
   boolean saturation = false;
-  
-    public Controller()
+
+  public Controller()
   {
   }
 

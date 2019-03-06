@@ -22,14 +22,14 @@ void setup() {
   DoublePIDsimulator simulatorDC = new DoublePIDsimulator(100);
   DoublePIDgeneticAlgorithm Optimization = new DoublePIDgeneticAlgorithm(numberOfProbes, pupulationSize, timeStep);
 
-  Optimization.SetAbsoluteErrorIntegral();
+  Optimization.SetSquareErrorIntegral();
 
   for (int i = 0; i < 30; i++)
   {
     println("\niteration: ", i);
     Optimization.doOneGeneration();
+    Optimization.showBest();
   }
-  
 
   PIDparameters = Optimization.showBest();
 
