@@ -7,7 +7,7 @@ void setup() {
   size(1300, 700);
   background(150);
 
-  final long numberOfProbes = 1000;
+  final long numberOfProbes = 2000;
   final double timeStep = 0.001;
   final int pupulationSize = 100;
   double[] PIDparameters;
@@ -17,17 +17,19 @@ void setup() {
   points[1] = new GPointsArray((int)numberOfProbes);
 
   //SinglePIDsimulator simulatorDC = new SinglePIDsimulator(100);
-  DoublePIDsimulator simulatorDC = new DoublePIDsimulator(100);
-
   //SinglePIDgeneticAlgorithm Optimization = new SinglePIDgeneticAlgorithm(numberOfProbes, pupulationSize, timeStep);
+  
+  DoublePIDsimulator simulatorDC = new DoublePIDsimulator(100);
   DoublePIDgeneticAlgorithm Optimization = new DoublePIDgeneticAlgorithm(numberOfProbes, pupulationSize, timeStep);
 
   Optimization.SetAbsoluteErrorIntegral();
 
   for (int i = 0; i < 30; i++)
   {
+    println("\niteration: ", i);
     Optimization.doOneGeneration();
   }
+  
 
   PIDparameters = Optimization.showBest();
 

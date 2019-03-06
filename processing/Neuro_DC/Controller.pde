@@ -7,6 +7,10 @@ public class Controller
   int minOutput;
   int maxOutput;
   boolean saturation = false;
+  
+    public Controller()
+  {
+  }
 
   public Controller(double _Kp, double _Ki, double _Kd)
   {

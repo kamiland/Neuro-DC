@@ -39,9 +39,9 @@ public class DoublePIDgeneticAlgorithm
       organism[i].angularPID.Ki = ((Math.random() * 2.0) - 1.0) * KiRange;
       organism[i].angularPID.Kd = ((Math.random() * 2.0) - 1.0) * KdRange;
 
-      organism[i].currentPID.Kp = ((Math.random() * 2.0) - 1.0) * KpRange; //randomize a P value between -KpRange and KpRange
-      organism[i].currentPID.Ki = ((Math.random() * 2.0) - 1.0) * KiRange;
-      organism[i].currentPID.Kd = ((Math.random() * 2.0) - 1.0) * KdRange;
+      organism[i].currentPID.Kp = ((Math.random() * 2.0) - 1.0) * KpRange2; //randomize a P value between -KpRange and KpRange
+      organism[i].currentPID.Ki = ((Math.random() * 2.0) - 1.0) * KiRange2;
+      organism[i].currentPID.Kd = ((Math.random() * 2.0) - 1.0) * KdRange2;
     }
   }
 
@@ -50,6 +50,7 @@ public class DoublePIDgeneticAlgorithm
   {
     for (int i = 0; i < populationSize; i++)
     {
+      print(" ", i);
       organism[i].Simulate(numberOfProbes, timeStep);
     }
     normalizeFitness();
@@ -111,6 +112,7 @@ public class DoublePIDgeneticAlgorithm
           parent = organism[x];
           picked = true;
         }
+        print("pickTwick?");
       } 
       while (!picked);
     } else
@@ -201,13 +203,14 @@ public class DoublePIDgeneticAlgorithm
   void mutatant(int i)
   {
     DoublePIDsimulator child = new DoublePIDsimulator();
+    
     child.angularPID.Kp = ((Math.random() * 2.0) - 1.0) * KpRange; //randomize a P value between -KpRange and KpRange
     child.angularPID.Ki = ((Math.random() * 2.0) - 1.0) * KiRange;
     child.angularPID.Kd = ((Math.random() * 2.0) - 1.0) * KdRange;
 
-    child.currentPID.Kp = ((Math.random() * 2.0) - 1.0) * KpRange; //randomize a P value between -KpRange and KpRange
-    child.currentPID.Ki = ((Math.random() * 2.0) - 1.0) * KiRange;
-    child.currentPID.Kd = ((Math.random() * 2.0) - 1.0) * KdRange;
+    child.currentPID.Kp = ((Math.random() * 2.0) - 1.0) * KpRange2; //randomize a P value between -KpRange and KpRange
+    child.currentPID.Ki = ((Math.random() * 2.0) - 1.0) * KiRange2;
+    child.currentPID.Kd = ((Math.random() * 2.0) - 1.0) * KdRange2;
 
     if (Math.random() > 0.01) 
     {
