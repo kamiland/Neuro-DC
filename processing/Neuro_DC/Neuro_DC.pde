@@ -8,7 +8,7 @@ void setup() {
   background(150);
 
   SinglePIDsimulator simulatorDC = new SinglePIDsimulator();
-  //DoublePIDSimulator simulatorDC = new DoublePIDSimulator();
+  //DoublePIDSimulator simulatorDC = new DoublePIDsimulator();
 
   final long numberOfProbes = 2000;
   final double timeStep = 0.001;

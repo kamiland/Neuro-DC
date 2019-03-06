@@ -1,4 +1,4 @@
-public class DoublePIDSimulator extends Simulator
+public class DoublePIDsimulator extends Simulator
 {
   double angularSetpoint = 100;
   double currentSetpoint = 0;

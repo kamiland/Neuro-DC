@@ -1,4 +1,4 @@
-public class SinglePIDSimulator extends Simulator
+public class SinglePIDsimulator extends Simulator
 {
   public Controller PID = new Controller
     (
