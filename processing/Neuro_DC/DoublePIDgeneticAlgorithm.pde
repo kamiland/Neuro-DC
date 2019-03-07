@@ -22,6 +22,7 @@ public class DoublePIDgeneticAlgorithm
 
   long numberOfProbes; /** ilość próbek symulacji   */
   double timeStep;
+  private double fitnessSum = 0;
 
   public DoublePIDgeneticAlgorithm(long _numberOfProbes, int _pupulationSize, double _timeStep)
   {
@@ -63,7 +64,7 @@ public class DoublePIDgeneticAlgorithm
   {
     best.Simulate(numberOfProbes, timeStep);
     double[] PID = { best.angularPID.Kp, best.angularPID.Ki, best.angularPID.Kd, best.currentPID.Kp, best.currentPID.Ki, best.currentPID.Kd };
-    println(PID[0], PID[1], PID[2], '\n',PID[3], PID[4], PID[5]);
+    println(PID[0], PID[1], PID[2], '\n', PID[3], PID[4], PID[5]);
     return PID;
   }
 
@@ -72,14 +73,18 @@ public class DoublePIDgeneticAlgorithm
   void nextGeneration()
   {
     normalizeFitness();
+    for (int k = 0; k < populationSize; k++)
+    {
+      fitnessSum += organism[k].fitness;
+    }
 
     for (int i = 0; i < populationSize; i++)
     {
       rand = Math.random();
-      if (rand >= 0.5)
+      if ((rand >= 0.5) &&  (fitnessSum > 0.0001 ))
       {
         pickTweak(i);  /**50% szans na przekazanie   */
-      } else if (rand >= 0.1)
+      } else if ((rand >= 0.1) &&  (fitnessSum > 0.0001 ))
       {
         pickAndCross(i); /** 40% szans skrzyżowania  */
       } else
@@ -89,7 +94,9 @@ public class DoublePIDgeneticAlgorithm
     }
 
     for (int i = 0; i < populationSize; i++)
+    {
       organism[i] = nextGenerationOrganism[i];
+    }
   }
 
 
@@ -98,24 +105,25 @@ public class DoublePIDgeneticAlgorithm
   {
     DoublePIDsimulator parent = new DoublePIDsimulator();
     int x;
+    int j = 0;
     boolean picked;
-    int limit = 0;
+    double temporarySum = 0;
 
     if (Math.random() > 0.01)
     {
       picked = false;
-      do
+      x = (int)(Math.random() * fitnessSum);
+
+      while (!picked)
       {
-        x = (int)(Math.random() * populationSize); 
-        if (Math.random() <= organism[x].fitness)
+        temporarySum += organism[j].fitness;
+        if (temporarySum >= x)
         {
-          parent = organism[x];
           picked = true;
+          parent = organism[j];
         }
-        limit++;
-        //print("pickTwick? ");
-      } 
-      while (!picked && (limit < 100));
+        j++;
+      }
     } else
     {
       parent = best;
@@ -132,38 +140,37 @@ public class DoublePIDgeneticAlgorithm
     DoublePIDsimulator parentB = new DoublePIDsimulator();
     int b;
     boolean picked;
-    int limit = 0;
+    int j = 0;
+    double temporarySum = 0;
 
+    a = (int)(Math.random() * fitnessSum);
     picked = false;
-    do
+    while (!picked)
     {
-      a = (int)(Math.random() * populationSize);
-      if (Math.random() <= organism[a].fitness)
+      temporarySum += organism[j].fitness;
+      if (temporarySum >= a)
       {
-        parentA = organism[a];
         picked = true;
+        parentA = organism[j];
       }
-      limit++;
-      //print("pickAndCross A? ");
-    } 
-    while (!picked && (limit < 100));
-    limit = 0;
+      j++;
+    }
+    j = 0;
 
     if (Math.random() > 0.01)
     {
+      b = (int)(Math.random() * fitnessSum);
       picked = false;
-      do
+      while (!picked)
       {
-        b = (int)(Math.random() * populationSize);
-        if (a != b && (Math.random() <= organism[b].fitness))
+        temporarySum += organism[j].fitness;
+        if (temporarySum >= b)
         {
-          parentB = organism[b];
           picked = true;
+          parentB = organism[j];
         }
-        limit++;
-        //print("pickAndCross B? ");
-      } 
-      while (!picked && (limit < 100));
+        j++;
+      }
     } else
     {
       parentB = best; // 1% chance of picking "best" as a pair to cross with

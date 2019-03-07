@@ -72,9 +72,15 @@ public class DoublePIDsimulator extends Simulator
         errorIntegral += (angularSetpoint - RK4.x[1])*(angularSetpoint - RK4.x[1]) * timeStep;
       }
     }
+  
+    if((Double)errorIntegral == Double.NaN) 
+    {
+      errorIntegral = Double.MAX_VALUE;
+    }
+
 
     fitness = 1.0 / (errorIntegral + 1.0);
-    //println("\nerrorIntegral: ", errorIntegral);
+    println("\n errorIntegral: ", errorIntegral);
     return RK4.x;
   }
 }
