@@ -22,11 +22,13 @@ void setup() {
   DoublePIDsimulator simulatorDC = new DoublePIDsimulator(100);
   DoublePIDgeneticAlgorithm Optimization = new DoublePIDgeneticAlgorithm(numberOfProbes, pupulationSize, timeStep);
 
-  Optimization.SetSquareErrorIntegral();
 
-  for (int i = 0; i < 5; i++)
+  for (int i = 0; i < 10; i++)
   {
     println("\niteration: ", i);
+    Optimization.SetAbsoluteErrorIntegral();
+    Optimization.SetAngularSaturation(0, 0.1);
+    Optimization.SetCurrentSaturation(0, 0.1);
     Optimization.doOneGeneration();
     Optimization.showBest();
   }

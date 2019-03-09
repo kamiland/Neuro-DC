@@ -73,7 +73,7 @@ public class DoublePIDsimulator extends Simulator
       }
     }
   
-    if((Double)errorIntegral == Double.NaN) 
+    if(errorIntegral == Double.NaN) 
     {
       errorIntegral = Double.MAX_VALUE;
     }

@@ -14,11 +14,11 @@ public class DoublePIDgeneticAlgorithm
 
   double KpRange = 10;
   double KiRange = 10;
-  double KdRange = 10;
+  double KdRange = 0;
 
   double KpRange2 = 10;
   double KiRange2 = 10;
-  double KdRange2 = 10;
+  double KdRange2 = 0;
 
   long numberOfProbes; /** ilość próbek symulacji   */
   double timeStep;
@@ -114,7 +114,7 @@ public class DoublePIDgeneticAlgorithm
       picked = false;
       x = (int)(Math.random() * fitnessSum);
 
-      while (!picked)
+      while (!picked && (j < populationSize))
       {
         temporarySum += organism[j].fitness;
         if (temporarySum >= x)
@@ -145,7 +145,7 @@ public class DoublePIDgeneticAlgorithm
 
     a = (int)(Math.random() * fitnessSum);
     picked = false;
-    while (!picked)
+    while (!picked && (j < populationSize))
     {
       temporarySum += organism[j].fitness;
       if (temporarySum >= a)
@@ -161,7 +161,7 @@ public class DoublePIDgeneticAlgorithm
     {
       b = (int)(Math.random() * fitnessSum);
       picked = false;
-      while (!picked)
+      while (!picked && (j < populationSize))
       {
         temporarySum += organism[j].fitness;
         if (temporarySum >= b)
@@ -284,6 +284,25 @@ public class DoublePIDgeneticAlgorithm
     for (int i = 0; i < populationSize; i++)
     {
       organism[i].SetSquareErrorIntegral();
+    }
+  }
+
+  public void SetAngularSaturation(double _minOutput, double _maxOutput)
+  {
+    for (int i = 0; i < populationSize; i++)
+    {
+      organism[i].angularPID.saturation = true;
+      organism[i].angularPID.minOutput = _minOutput;
+      organism[i].angularPID.maxOutput = _maxOutput;
+    }
+  }
+  public void SetCurrentSaturation(double _minOutput, double _maxOutput)
+  {
+    for (int i = 0; i < populationSize; i++)
+    {
+      organism[i].currentPID.saturation = true;
+      organism[i].currentPID.minOutput = _minOutput;
+      organism[i].currentPID.maxOutput = _maxOutput;
     }
   }
 }

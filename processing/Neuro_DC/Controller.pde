@@ -4,8 +4,8 @@ public class Controller
   double P, I, D;
   double integral, derivative;
   double error, preError = 0, controllerOutput = 0;
-  int minOutput;
-  int maxOutput;
+  double minOutput;
+  double maxOutput;
   boolean saturation = false;
 
   public Controller()
@@ -19,7 +19,7 @@ public class Controller
     Kd = _Kd;
   }
 
-  public Controller(double _Kp, double _Ki, double _Kd, int _minOutput, int _maxOutput)
+  public Controller(double _Kp, double _Ki, double _Kd, double _minOutput, double _maxOutput)
   {
     saturation = true;
     Kp = _Kp;
